@@ -2,7 +2,7 @@ import requests
 import pytest
 import allure
 
-from conftest import generate_courier_data
+from helpers import generate_courier_data
 from data import (
     COURIER_CREATE_API,
     CREATE_DUPLICATE_MESSAGE,
@@ -14,14 +14,8 @@ from data import (
 class TestCourierCreate:
 
     @allure.title("Успешное создание курьера")
-    def test_courier_can_be_created(self):
-        login, password, first_name = generate_courier_data()
-        payload = {
-            "login": login,
-            "password": password,
-            "firstName": first_name
-        }
-        response = requests.post(COURIER_CREATE_API, json=payload)
+    def test_courier_can_be_created(self, created_courier):
+        response = created_courier["create_response"]
         assert response.status_code == 201
         assert response.json() == {"ok": True}
 

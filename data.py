@@ -6,6 +6,7 @@ COURIER_DELETE_API = f"{BASE_URL}/api/v1/courier/{{courier_id}}"
 
 ORDERS_CREATE_API = f"{BASE_URL}/api/v1/orders"
 ORDERS_LIST_API = f"{BASE_URL}/api/v1/orders"
+ORDERS_CANCEL_API = f"{BASE_URL}/api/v1/orders/cancel"
 
 CREATE_MISSING_FIELD_MESSAGE = "Недостаточно данных для создания учетной записи"
 CREATE_DUPLICATE_MESSAGE = "Этот логин уже используется. Попробуйте другой."
