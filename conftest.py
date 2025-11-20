@@ -13,6 +13,17 @@ from helpers import generate_courier_data
 
 
 @pytest.fixture
+def courier_data_for_cleanup():
+    login, password, first_name = generate_courier_data()
+    courier_id = [None]
+    
+    yield login, password, first_name, courier_id
+    
+    if courier_id[0]:
+        requests.delete(COURIER_DELETE_API.format(courier_id=courier_id[0]))
+
+
+@pytest.fixture
 def created_courier():
     login, password, first_name = generate_courier_data()
     
@@ -44,11 +55,6 @@ def created_courier():
     
     if courier_id:
         requests.delete(COURIER_DELETE_API.format(courier_id=courier_id))
-
-
-@pytest.fixture
-def courier(created_courier):
-    return created_courier
 
 
 @pytest.fixture

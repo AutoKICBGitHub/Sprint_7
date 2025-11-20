@@ -16,15 +16,15 @@ from data import (
 class TestCourierLogin:
 
     @allure.title("Успешная авторизация курьера")
-    def test_courier_can_login_and_receive_id(self, courier):
-        payload = {"login": courier["login"], "password": courier["password"]}
+    def test_courier_can_login_and_receive_id(self, created_courier):
+        payload = {"login": created_courier["login"], "password": created_courier["password"]}
         response = requests.post(COURIER_LOGIN_API, json=payload)
         assert response.status_code == 200
         assert "id" in response.json()
 
     @allure.title("Ошибка при отсутствии обязательных полей")
-    def test_login_requires_all_fields(self, courier):
-        payload = {"password": courier["password"]}
+    def test_login_requires_all_fields(self, created_courier):
+        payload = {"password": created_courier["password"]}
         response = requests.post(COURIER_LOGIN_API, json=payload)
         assert response.status_code == 400
         assert response.json().get("message") == LOGIN_MISSING_FIELD_MESSAGE
@@ -40,9 +40,9 @@ class TestCourierLogin:
         assert response.json().get("message") == LOGIN_NOT_FOUND_MESSAGE
 
     @allure.title("Ошибка при неправильном пароле")
-    def test_login_wrong_password_returns_error(self, courier):
+    def test_login_wrong_password_returns_error(self, created_courier):
         payload = {
-            "login": courier["login"],
+            "login": created_courier["login"],
             "password": TEST_WRONG_PASSWORD
         }
         response = requests.post(COURIER_LOGIN_API, json=payload)

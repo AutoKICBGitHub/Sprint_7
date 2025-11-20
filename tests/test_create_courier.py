@@ -14,17 +14,32 @@ from data import (
 class TestCourierCreate:
 
     @allure.title("Успешное создание курьера")
-    def test_courier_can_be_created(self, created_courier):
-        response = created_courier["create_response"]
+    def test_courier_can_be_created(self, courier_data_for_cleanup):
+        from data import COURIER_LOGIN_API, COURIER_DELETE_API
+        
+        login, password, first_name, courier_id = courier_data_for_cleanup
+        payload = {
+            "login": login,
+            "password": password,
+            "firstName": first_name
+        }
+        response = requests.post(COURIER_CREATE_API, json=payload)
         assert response.status_code == 201
         assert response.json() == {"ok": True}
+        
+        login_response = requests.post(
+            COURIER_LOGIN_API,
+            json={"login": login, "password": password}
+        )
+        if login_response.status_code == 200:
+            courier_id[0] = login_response.json().get("id")
 
     @allure.title("Нельзя создать двух одинаковых курьеров")
-    def test_cannot_create_duplicate_courier(self, courier):
+    def test_cannot_create_duplicate_courier(self, created_courier):
         payload = {
-            "login": courier["login"],
-            "password": courier["password"],
-            "firstName": courier["first_name"]
+            "login": created_courier["login"],
+            "password": created_courier["password"],
+            "firstName": created_courier["first_name"]
         }
         response = requests.post(COURIER_CREATE_API, json=payload)
         assert response.status_code == 409
