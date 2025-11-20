@@ -1,8 +1,7 @@
 import pytest
-import requests
 import allure
 
-from data import ORDERS_CREATE_API, ORDERS_CANCEL_API, TEST_ORDER_COLORS, TEST_ORDER_PAYLOAD_TEMPLATE
+from data import TEST_ORDER_COLORS
 
 
 @allure.feature("Создание заказа")
@@ -22,6 +21,10 @@ class TestOrderCreation:
     )
     def test_create_order_with_various_colors(self, created_order):
         response = created_order["create_response"]
-        assert response.status_code == 201
-        assert "track" in response.json()
+        
+        with allure.step("Проверить статус ответа"):
+            assert response.status_code == 201
+        
+        with allure.step("Проверить наличие track в ответе"):
+            assert "track" in response.json()
 
